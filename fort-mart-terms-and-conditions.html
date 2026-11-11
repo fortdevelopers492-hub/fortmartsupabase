@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="fort-mart-logo-no-background.png" type="image/png">
+    <title>Fort Mart - Terms and Conditions Legal Context Structure</title>
+    <style>
+        /* General Page Styling */
+        :root {-fort-blue-light: #0288d1}
+
+        body { 
+            font-family: Arial, Helvetica, sans-serif; 
+            line-height: 1.7; 
+            color: #2d3748; 
+            padding: 40px 20px; 
+            background-color: #f4f7f6; 
+            max-width: 900px; 
+            margin: 0 auto; 
+        }
+
+        /* Container Styling */
+        .legal-box { 
+            background: #ffffff; 
+            padding: 40px; 
+            border-radius: 8px; 
+            border: 1px solid #cbd5e0; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
+        }
+
+        /* Typography */
+        h1 { 
+            color: #003366; 
+            font-size: 2rem; 
+            margin-bottom: 10px; 
+            line-height: 1.3;
+        }
+
+        h2 { 
+            color: #003366; 
+            font-size: 1.4rem; 
+            margin-top: 30px; 
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        h3 { 
+            color: #0288d1; 
+            font-size: 1.15rem; 
+            margin-top: 20px;
+        }
+
+        p, li { 
+            font-size: 1rem; 
+            color: #4a5568; 
+            margin-bottom: 15px; 
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Highlight & Alert Styling */
+        .highlight-clause {
+            background-color: #ebf8ff;
+            border-left: 4px solid #0288d1;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Back Button Styling */
+        .back-btn { 
+            display: inline-block; 
+            background-color: #0288d1; 
+            color: white; 
+            padding: 12px 24px; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            margin-bottom: 25px; 
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .back-btn:hover {
+            background-color: #01579b;
+        }
+
+        /* Sub-meta Info */
+        .meta-info {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 20px;
+        }
+
+        /* =========================================================
+           RESPONSIVE MEDIA QUERIES FOR SMALLER SCREENS
+           ========================================================= */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .legal-box {
+                padding: 25px 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            h3 {
+                font-size: 1.05rem;
+            }
+
+            p, li {
+                font-size: 0.92rem;
+                line-height: 1.5;
+            }
+
+            .back-btn {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 10px 5px;
+            }
+
+            .legal-box {
+                padding: 18px 12px;
+                border-radius: 4px;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            h2 {
+                font-size: 1.05rem;
+            }
+
+            h3 {
+                font-size: 0.95rem;
+            }
+
+            p, li {
+                font-size: 0.85rem;
+            }
+
+            .highlight-clause {
+                padding: 10px 12px;
+            }
+        }
+
+        /* Media wrapper & elements */
+        .media-container-ad {
+            margin: 15px 0;
+            width: 100%;
+            max-height: 250px;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+
+        .media-container-ad img, 
+        .media-container-ad video {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Button & disabled state styling */
+        .btn-blue-ad {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .btn-blue-ad:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .btn-blue-ad:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.65;
+        }
+
+        /* Overlay styling */
+        .modal-overlay-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Modal box container */
+        .modal-box-ad {
+            background-color: #ffffff;
+            padding: 24px;
+            max-width: 450px;
+            width: 90%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .rounded-rect {
+            border-radius: 8px;
+            border: 1px solid var(--fort-gray-border);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+        
+    </style>
+</head>
+<body>    
+
+    <a href="index.html" class="back-btn">← Go Back to Fort Mart</a>
+
+    <div class="legal-box">
+        <h1>Fort Mart Digital Marketplace Terms and Conditions Core Contract Agreement Clause Sheets</h1>
+        <p><strong>Operational Policy Governance Audit Core Baseline Context Log Framework Code Version Reference: June 2026 Baseline Logs</strong></p>
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #cbd5e0;">
+        
+        <h2>1. Account Profile Governance and Identity Assertions Validation Rules Bounds</h2>
+        <p>Accessing marketplace transaction routing clusters nodes channels panels systems parameters demands active alignment validation check metrics compliance states mappings. Users pledge true accurate non-fraudulent identification verification properties entries values during multi-step auth wizard operations pipelines. Only commercial merchant business corporate registered entities profiles map permission flags variables triggers parameters hooks to create, update, or append digital commercial stock inventory assets nodes postings rows structures inside catalog grids views layers.</p>
+        <p>Any attempt to create an account profile using fraudulent text parameters, expired registration documents, or stolen business credentials will trigger an immediate, automated platform lockout flag. Fort Mart preserves the absolute right to audit all account profiles against official identification frameworks via our administrative dashboard. Merchants agree to update their regulatory compliance data points immediately upon modification, ensuring the marketplace remains populated exclusively by valid, authorized trading entities. Failure to provide up-to-date validation information will lead to immediate deletion of all active catalog postings.</p>
+        
+        <h2>2. Cross-Network Geolocation Localization Inventory Pipeline Allocation Restrictions Matrix</h2>
+        <p>To preserve regional alignment policies, inventory search operations, default local currencies expressions (₦ or $ rate mappings vectors settings parameters), and item asset discoverability arrays indices limits checks execute strictly matching legal country selectors boundaries data definitions attributes specified upon account registration pipeline processing configurations matrices data sets indices. Users bypass or altering their local geographic metadata variables using masking tools will face immediate listing disqualification.</p>
+        <p>Our search algorithms query catalog structures by prioritizing spatial data structures relative to your registered home boundaries. This ensures compliance with local trade controls, custom tax distributions, and regional merchant shipping logistics capabilities. If our monitoring infrastructure logs a merchant manipulating their network IP routing tables or location parameters to deceptively inject listings into alternate regional feeds, that account will be stripped of its posting flags and restricted from accessing our dynamic marketplace interface loops entirely.</p>
+        
+        <h2>3. Commercial Chat Interactions and Fair Trading Protocol Matrices</h2>
+        <p>Fort Mart provides interactive, multi-grid commercial chat channels to allow direct buyers and merchants to interact regarding pricing, fulfillment parameters, and item specifications. All users agree to conduct themselves professionally inside these chat spaces. Using these channels for harassment, off-platform payment redirection scam loops, or transmitting corrupted link parameters will result in immediate account deletion and a permanent ban from our network database ledgers.</p>
+        <p>These dedicated chat rooms are deployed purely to facilitate transparent trading negotiations and support question cycles. Merchants are strictly barred from deploying text scraping extensions, automated spam scripts, or misleading link routing configurations inside these channels. If a user files an official report via our admin support tools detailing chat abuse or payment fraud attempts, our platform administration team will review the encrypted communication logs to apply protective account constraints and prevent further system exploitation.</p>
+        
+        <h2>4. Transactional Settlement Indemnity Waiver Clauses</h2>
+        <p>Fort Mart functions purely as a frontend display software framework platform layer facilitating peer-to-peer directory interaction loops tracking logs parameters profiles, and holds zero legal merchant-of-record financial fiduciary stakeholder responsibilities properties checks regarding real physical stock dispatch quality conditions adjustments, escrow payment routing mechanisms validations systems tracking, or individual merchant vendor performance standard criteria loops fulfillment tracking structures matrices parameters logs rows. All fiscal interactions are conducted at the sole risk of the transacting parties.</p>
+        <p>We do not handle, store, or process payment settlements directly on our servers, nor do we act as an intermediary logistics provider. Any trade dispute regarding item condition, delivery failure, or payment processing errors must be settled directly between the buyer and the corresponding merchant vendor. Fort Mart explicitly disclaims all liability for commercial losses, fraudulent actions, or item defects, operating completely as an independent technology provider that offers an interactive directory matrix for sovereign global entities.</p>
+
+        <h2>5. Content Moderation Rights, User Reports, and Property Protections</h2>
+        <p>The platform architecture reserves an absolute right to review, shadowban, edit, or purge any product listing that infringes on trademark guidelines, copyright values, or localized trade rules. Users can flag suspicious postings or reporting fraudulent behavior using the admin pipeline support nodes. Action taken on these flags is at the complete discretion of platform administration, and decisions made regarding asset deletions are final and unreviewable.</p>
+        <p>Our content moderation engines actively scan catalog fields for prohibited keywords, counterfeit branding marks, and malicious scripting blocks. If a listing is flagged as non-compliant, it is pulled from the public index queue to maintain platform security. Merchants who consistently upload prohibited stock or duplicate listings to bypass system limits will face automated account deletion. Fort Mart's choices concerning database integrity and user protections are final, non-negotiable, and binding upon all participating network terminals.</p>
+    </div>
+
+</body>
+</html>

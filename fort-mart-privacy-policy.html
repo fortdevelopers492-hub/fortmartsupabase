@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="fort-mart-logo-no-background.png" type="image/png">
+    <title>Fort Mart - Privacy Policy Agreement Context</title>    
+    <style>
+        /* General Page Styling */
+        :root {-fort-blue-light: #0288d1}
+
+        body { 
+            font-family: Arial, Helvetica, sans-serif; 
+            line-height: 1.7; 
+            color: #2d3748; 
+            padding: 40px 20px; 
+            background-color: #f4f7f6; 
+            max-width: 900px; 
+            margin: 0 auto; 
+        }
+
+        /* Container Styling */
+        .legal-box { 
+            background: #ffffff; 
+            padding: 40px; 
+            border-radius: 8px; 
+            border: 1px solid #cbd5e0; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
+        }
+
+        /* Typography */
+        h1 { 
+            color: #003366; 
+            font-size: 2rem; 
+            margin-bottom: 10px; 
+            line-height: 1.3;
+        }
+
+        h2 { 
+            color: #003366; 
+            font-size: 1.4rem; 
+            margin-top: 30px; 
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        h3 { 
+            color: #0288d1; 
+            font-size: 1.15rem; 
+            margin-top: 20px;
+        }
+
+        p, li { 
+            font-size: 1rem; 
+            color: #4a5568; 
+            margin-bottom: 15px; 
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Highlight & Alert Styling */
+        .highlight-clause {
+            background-color: #ebf8ff;
+            border-left: 4px solid #0288d1;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Back Button Styling */
+        .back-btn { 
+            display: inline-block; 
+            background-color: #0288d1; 
+            color: white; 
+            padding: 12px 24px; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            margin-bottom: 25px; 
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .back-btn:hover {
+            background-color: #01579b;
+        }
+
+        /* Sub-meta Info */
+        .meta-info {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 20px;
+        }
+
+        /* =========================================================
+           RESPONSIVE MEDIA QUERIES FOR SMALLER SCREENS
+           ========================================================= */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .legal-box {
+                padding: 25px 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            h3 {
+                font-size: 1.05rem;
+            }
+
+            p, li {
+                font-size: 0.92rem;
+                line-height: 1.5;
+            }
+
+            .back-btn {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 10px 5px;
+            }
+
+            .legal-box {
+                padding: 18px 12px;
+                border-radius: 4px;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            h2 {
+                font-size: 1.05rem;
+            }
+
+            h3 {
+                font-size: 0.95rem;
+            }
+
+            p, li {
+                font-size: 0.85rem;
+            }
+
+            .highlight-clause {
+                padding: 10px 12px;
+            }
+        }
+
+        /* Media wrapper & elements */
+        .media-container-ad {
+            margin: 15px 0;
+            width: 100%;
+            max-height: 250px;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+
+        .media-container-ad img, 
+        .media-container-ad video {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Button & disabled state styling */
+        .btn-blue-ad {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .btn-blue-ad:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .btn-blue-ad:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.65;
+        }
+
+        /* Overlay styling */
+        .modal-overlay-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Modal box container */
+        .modal-box-ad {
+            background-color: #ffffff;
+            padding: 24px;
+            max-width: 450px;
+            width: 90%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .rounded-rect {
+            border-radius: 8px;
+            border: 1px solid var(--fort-gray-border);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+        
+    </style>
+</head>
+<body>   
+
+    <a href="index.html" class="back-btn">← Go Back to Fort Mart</a>
+
+    <div class="legal-box">
+        <h1>Fort Mart Platform Privacy Policy Core Legal Agreement Context Document</h1>
+        <p><strong>Effective Processing Session Operational Date Framework Context Baseline Stamp Log: June 2026</strong></p>
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #cbd5e0;">
+        
+        <h2>1. Scope of Data Ingestion and Telemetry Traces Tracking Operations Registers Matrix</h2>
+        <p>Fort Mart logs platform authentication information vectors properties (including identity name strings records expressions elements indices values items data columns fields contexts and local browser device orientation preferences configurations states matrices maps) solely to compute performance analytics indicators metrics models and secure local inventory distribution logic constraints boundaries variables parameters routing channels pipeline processes checks maps loops indicators. This ensures that the marketplace grid functions securely whenever users are uploading new products or establishing connections within the transaction panels.</p>
+        <p>This tracking framework records standard browser signatures, local response latency metrics, screen dimension states, and network routing logs to build optimized multi-grid product displays for users. By processing these technical telemetry vectors, our system can properly balance content queries, display correct localized product listings, and prevent algorithmic exploitation of listing metrics. These tracking loops strictly monitor interface execution mechanics rather than harvesting personal physical backgrounds, ensuring our digital marketplace maintains standard performance integrity while protecting individual identity parameters.</p>
+        
+        <h2>2. Data Synchronization Controls Framework Parity Definitions Bounds</h2>
+        <p>Platform accounts data sets, posted catalog inventory assets nodes items tracking structural files attributes definitions parameters numbers values patterns, message transaction logs pipelines streams text rows registers, and system communication metrics records traces elements remain encrypted inside localized persistent sandbox memory registers blocks storage. Core entities matrices data schemas properties variables values logs parameters are updated regularly without administrative manual interventions to ensure real-time marketplace accuracy. This automated management cycle guarantees that listing elements match buyer queries seamlessly.</p>
+        <p>Our database backend utilizes automated synchronization daemons that rapidly compile modifications across our distributed product grids. If a merchant alters a product price or drops a listing entirely, our synchronization controls instantly update global data records without causing latency spikes across adjacent browser sessions. This structural configuration isolates temporary browser execution errors from corrupting our core database tables. By applying end-to-end transport encryption protocols, we ensure that catalog states, account verification flags, and commercial inventory maps remain resilient against systemic node sniffing or transmission disruptions.</p>
+        
+        <h2>3. Third-Party Inline Tracking Script Infrastructure Implementations Frameworks Slots Boundaries</h2>
+        <p>We leverage automated script execution systems channels trackers (such as Google AdSense programmatic monetization tracking layout loops parameters elements arrays logic sets blocks) to serve contextually optimized digital marketing layout modules banners spaces frames blocks tracking scripts directly across multi-grid loops layouts rows instances spaces nodes inside our runtime rendering layouts frames. These advertising blocks gather anonymous telemetry to customize user encounters without ever violating personal data storage perimeters or capturing financial credentials.</p>
+        <p>These integrated tracking frames monitor general engagement traits, such as banner impression counts, layout interaction rates, and general geographical region markers. They operate completely partitioned from our internal chat databases, account profiles, and transaction logs. This absolute code boundary ensures third-party script files can never scrape sensitive merchant data rows. The implementation of sandbox attributes inside our HTML code structure blocks unauthorized canvas reading or cookie mining, creating a safe commercial browsing experience that supports our open-access architecture.</p>
+        
+        <h2>4. Data Retention, Pure Purge Control Pipelines Logic Metrics Lifespans Rules</h2>
+        <p>Users possess complete autonomy execution privileges commands paths options levers keys to delete posted operational inventory catalog assets schemas structures text rows items parameters, purge communication history context streams containers channels threads entries metrics loops directly from settings panels matrices nodes without data replication traces residues left behind inside operational ledger databases variables mapping schemas registries. If an item is unlisted, its data fields are fully scrubbed from the live public query indexing matrices immediately.</p>
+        <p>When an account owner executes a permanent data wipe command via their account management modal, our server blocks instantly launch an unrecoverable overwrite sequence. This process erases every associated text element, catalog image link, relational link, and messaging metadata parameter within forty-eight hours across all storage nodes and validation buffers. We do not retain residual listing history files or hidden merchant properties, ensuring that once you select to erase data from Fort Mart, it is fully removed from our active network infrastructure.</p>
+
+        <h2>5. Strict Account Profile and Commercial Chat Confidentiality Framework</h2>
+        <p>Fort Mart enforces strict account creation confidentiality and absolute privacy parameters over peer-to-peer commercial chat systems. All commercial messages, transaction negotiation details, product inquiry logs, and contact values exchanged inside our localized chat threads are fully encrypted and will never be shared with outside data brokers or other commercial merchants. Users can securely negotiate product transactions knowing their communication pathways are structurally insulated from platform leaks, provided that client terminal endpoints remain uncompromised.</p>
+        <p>The dialogue paths within our platform utilize strict session token checks to ensure only the authenticated buyer and merchant can load specific chat data rows. Our engineering design treats these logs as highly confidential text arrays that are inaccessible to standard platform query mechanisms. However, users must ensure they do not accidentally expose their chat records by running malicious browser add-ons, using compromised networks, or manually exporting text logs, as Fort Mart's internal infrastructure blocks all external tracking matrices at the server boundary.</p>
+
+        <h2>6. Product Listing Verification and Identity Protection Measures</h2>
+        <p>To uphold the safety of our public marketplace, identity verification data points collected during account profile setups are kept in secure database rows separate from public view. This dual-layer database isolation prevents unauthorized data scraping while simultaneously confirming that individuals posting items are valid business entities. Changes to this verification privacy mapping will be communicated through this central policy log to maintain structural transparency.</p>
+        <p>When a merchant undergoes the identity validation routine, their submitted data fields are immediately encrypted and routed to a restricted storage database. This separate database is entirely inaccessible from standard public storefront APIs or product discovery algorithms. This structural isolation effectively shields merchants from automated identity scraping attempts while providing buyers with peace of mind, knowing that every verified listing entity has successfully passed our internal administration dashboard compliance parameters.</p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fort Mart - Marketplace & Chat</title>
+    <link rel="icon" href="fort-mart-logo-no-background.png" type="image/png">
+    <link rel="stylesheet" href="fort-mart-styles.css">
+    
+    <!-- Supabase JS Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+    (function(){
+        emailjs.init({
+            publicKey: "BIkzBsPuCKiv2Wqxu",
+        });
+    })();
+    </script>
+    <script src="https://js.paystack.co/v2/inline.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="fort-mart-script.js"></script>
+</head>
+<body class="mode-laptop">
+
+    <!-- Universal Custom Modal Alert Hook Target Box Container Context Matrix Grid Element -->
+    <div id="alert-modal-hook-element" class="modal-overlay">
+        <div class="modal-box rounded-rect text-center">
+            <h3 id="alert-modal-title-text-node">Application Prompt</h3>
+            <p id="alert-modal-body-text-node" class="margin-top-sm" style="color: var(--fort-blue-dark); font-size: 0.95rem; line-height: 1.4;"></p>
+            <button id="alert-modal-close-trigger-btn" class="btn-blue margin-top-md" style="min-width: 100px;">Close</button>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-box rounded-rect">
+            <h3>Are you sure?</h3>
+            <p id="confirm-modal-text">Unsaved changes may be discarded.</p>
+            <div class="btn-group">
+                <button id="confirm-yes-btn" class="btn-blue">Yes, Proceed</button>
+                <button id="confirm-no-btn" class="btn-gray">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="ad-modal" class="modal-overlay-ad">
+        <div class="modal-box-ad rounded-rect text-center">
+            <!-- Dynamically injected ad header -->
+            <h2 id="ad-header"></h2>
+            
+            <!-- Dynamically injected ad text -->
+            <p id="ad-text"></p>
+            
+            <!-- Dynamically injected ad media (image or video) -->
+            <div id="ad-media-container" class="media-container-ad"></div>
+            
+            <br>
+            <!-- Modal Action Buttons -->
+            <div class="ad-actions">
+                <!-- Visit / External link button -->
+                <a class="btn-blue" style="text-decoration: none !important;" id="ad-visit-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-green-ad">Visit Site</a>
+                
+                <!-- Continue / Close button -->
+                <button id="ad-continue-btn" onclick="closeActiveModalDirectlyAd('ad-modal')" class="btn-blue-ad">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-box rounded-rect" id="auth-modal-content"></div>
+    </div>
+
+    <div id="user-profile-summary-modal" class="modal-overlay">
+        <div class="modal-box rounded-rect" id="user-profile-summary-modal-body" style="max-width: 600px;"></div>
+    </div>
+
+    <div class="app-container scrollable-container">
+        
+        <header id="top-navbar" class="top-nav-bar bg-blue">
+            <button class="nav-toggle-btn" onclick="toggleSideDrawer()">☰</button>
+            <div class="search-container">
+                <input type="text" id="global-search-bar" placeholder="Search Products……" oninput="handleGlobalSearch(this.value)">
+            </div>
+            <div class="nav-right-actions">
+                <div class="profile-avatar-trigger" onclick="navigateToPage('my-account'); switchSettingsSection('account-info')">
+                    <img id="nav-user-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" alt="User Profile">
+                </div>
+            </div>
+        </header>
+
+        <div class="main-workspace">
+            <nav id="side-drawer" class="side-drawer-menu">
+                <div class="drawer-header-pane-card rounded-rect">
+                    <img id="drawer-user-avatar-frame-node" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" alt="document.getElementById("drawer-user-avatar)">
+                    <div style="overflow: hidden;">
+                        <h4 id="drawer-user-identity-fullname-lbl" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--fort-blue-dark); font-weight: 700;">Guest Terminal Node</h4>
+                        <span id="drawer-user-classification-badge-lbl" class="profile-mode-tag-label personal">Logged Out (Guest)</span>
+                    </div>
+                </div>
+                <ul class="drawer-links">
+                    <li id="nav-item-home" onclick="navigateToPage('home')">🏠 Home (Products)</li>
+                    <li id="nav-item-messages" onclick="navigateToPage('messages')">💬 Messages</li>
+                    <li id="nav-item-my-aipage" class="hidden-admin-node" onclick="navigateToPage('prompt-workspace-aipage')">Semi-AI Assistant</li>                    
+                    <li id="nav-item-my-account" onclick="navigateToPage('my-account')">⚙️ My Account Settings</li>
+                    <li id="admin-nav-item" class="hidden-admin-node" onclick="navigateToPage('admin-dashboard')">🛡️ Admin Dashboard</li>
+                    <br>
+                    <div id="justForButton" class="drawer-links-three">
+                        <button id="changeable-logout-btn" onclick="doubleButtonFunction()" class="btn-blue">Sign in</button>
+                    </div>
+                    <button onclick="toggleSideDrawer()" class="btn-gray">Close</button>
+                </ul>
+            </nav>
+
+            <main id="view-port" class="content-view-port scrollable-container">
+                
+                <section id="page-home" class="view-page active-view">
+                    <div id="category-ribbon" class="categories-bar-wrapper">
+                        <button class="category-toggle" onclick="toggleCategoryDrawer()">Browse Categories ▼</button>
+                        <div id="category-items-container" class="category-items-grid hidden"></div>
+                    </div>
+                    
+                    <div id="active-category-header" class="hidden">
+                        <h2 id="category-title-text">Category</h2>
+                        <input type="text" id="category-specific-search" placeholder="Search within category..." oninput="handleCategorySearch(this.value)">
+                    </div>
+
+                    <div id="products-display-grid" class="products-master-grid"></div>
+                    <div><button id="floating-action-creation-btn" class="floating-action-plus-button-node" onclick="handleFloatingActionButtonTrigger()">+</button></div>
+                </section>
+
+                <section id="page-messages" class="view-page hidden-view">
+                    <div class="messages-split-layout">
+                        <div id="chat-roster-pane" class="chat-roster-container rounded-rect">
+                            <div class="pane-header">
+                                <h3>Conversations Log</h3>
+                            </div>
+                            <div id="chat-threads-target-list"></div>
+                        </div>
+                        <div id="chat-conversation-pane" class="chat-conversation-workspace rounded-rect">
+                            <div id="chat-pane-empty-notice" class="empty-placeholder">
+                                <p>Select a running dialogue thread to view context history or launch messaging windows.</p>
+                            </div>
+                            <div id="chat-pane-active-view" class="active-conversation-grid">
+                                <div id="chat-window-top-toolbar" class="chat-context-sub-bar"></div>
+                                <div id="chat-bubble-stream-area" class="message-stream-scroller scrollable-container"></div>
+                                
+                                <div id="chat-multi-select-actions-subbar" class="message-action-overlay-bar hidden-node">
+                                    <div id="chat-selection-count-lbl" style="font-weight: 700; font-size: 0.85rem;">0 Items Highlighted</div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button onclick="executeSelectedMessagesTextCopy()" class="btn-sm-pencil" style="background-color: #ebf8ff; color: #2b6cb0;">📋 Copy</button>
+                                        <button onclick="triggerSelectedMessagesDeletionSequence()" class="btn-sm-pencil" style="background-color: #fed7d7; color: #9b2c2c;">🗑️ Delete</button>
+                                        <button onclick="clearMessagesSelectionContextTracker()" class="btn-sm-pencil" style="background-color: #edf2f7; color: #4a5568;">Cancel</button>
+                                    </div>
+                                </div>
+                                
+                                <div id="chat-input-row-bar-container" class="chat-input-row-bar">
+                                    <button class="attachment-btn" onclick="triggerMessageAttachedFileBrowserLink()">📎</button>
+                                    <input type="file" id="chat-message-file-attachment-input" class="hidden" onchange="handleMessageAttachedFileSelectionEvent(this)">
+                                    
+                                    <input type="text" id="chat-text-input-field" class="rounded-rect" placeholder="Type a message...">
+                                    <button onclick="sendChatMessageDirect()" class="btn-blue">Send</button>
+                                </div>
+                                <div id="chat-input-row-bar-blocked-notice" class="hidden-node text-center" style="background-color: #f7fafc; padding: 14px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; font-style: italic; color: #a0aec0; font-weight: 600;">
+                                    ⚠️ Incoming broadcast automated terminal node: System administration configurations prohibit text logs input responses.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="page-prompt-workspace-aipage" class="view-page-aipage hidden-view-aipage" style="display: none !important;">
+                    <div class="prompt-page-container-aipage">
+                        
+                        <!-- DEFAULT VIEW: Prompt Search & Grid -->
+                        <div id="prompt-search-view-aipage" class="prompt-search-wrapper-aipage rounded-rect-aipage">
+                            <div class="prompt-header-box-aipage">
+                                <h2>Explore Prompts</h2>
+                                <p>Select a starter prompt or type your query below to launch an interactive session.</p>
+                                
+                                <div class="prompt-input-group-aipage">
+                                    <input type="text" id="main-prompt-input-aipage" class="rounded-rect-aipage" placeholder="Ask anything or enter a detailed prompt..." onkeydown="if(event.key==='Enter') submitMainPrompt()">
+                                    <button class="btn-blue" onclick="submitMainPrompt()">Generate</button>
+                                </div>
+                            </div>
+
+                            <!-- Pre-built Starter Cards -->
+                            <div class="prompt-cards-grid-aipage">
+                                <div class="prompt-card-aipage rounded-rect-aipage" onclick="triggerPresetPrompt('Content Creation', 'Write a marketing strategy for a SaaS product launch.')">
+                                    <span class="badge-aipage">Marketing</span>
+                                    <h4>SaaS Product Launch</h4>
+                                    <p>Draft a multi-channel campaign strategy covering social, email, and PR.</p>
+                                </div>
+                                <div class="prompt-card-aipage rounded-rect-aipage" onclick="triggerPresetPrompt('Code Debugging', 'Help me optimize and refactor a complex JS function.')">
+                                    <span class="badge-aipage">Development</span>
+                                    <h4>JS Optimization</h4>
+                                    <p>Refactor performance bottlenecks and improve maintainability.</p>
+                                </div>
+                                <div class="prompt-card-aipage rounded-rect-aipage" onclick="triggerPresetPrompt('Data Analysis', 'How do I build a dashboard layout with HTML grid?')">
+                                    <span class="badge-aipage">UI/UX</span>
+                                    <h4>Dashboard Layout</h4>
+                                    <p>Construct a flexible HTML/CSS grid layout for complex control panels.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OVERLAY VIEW: Active Chat & Sub-Prompts (Initially Hidden) -->
+                        <div id="prompt-chat-overlay-aipage" class="chat-overlay-pane-aipage rounded-rect-aipage hidden-node-aipage">
+                            <div class="chat-overlay-header-aipage">
+                                <div>
+                                    <h3 id="active-prompt-title-aipage">Interactive Session</h3>
+                                    <span id="active-prompt-category-aipage" class="badge-aipage">General</span>
+                                </div>
+                                <button class="btn-sm-pencil-aipage" style="background-color: #edf2f7; color: #4a5568;" onclick="closePromptChatOverlay()">← Back to Search</button>
+                            </div>
+
+                            <div id="prompt-chat-stream-aipage" class="message-stream-scroller-aipage scrollable-container-aipage">
+                                <!-- Dynamic messages populate here -->
+                            </div>
+
+                            <!-- Dynamic Related Sub-Prompts -->
+                            <div class="sub-prompts-bar-aipage">
+                                <span class="sub-prompts-label-aipage">Suggested follow-ups:</span>
+                                <div id="sub-prompts-chip-container-aipage" class="sub-prompts-chips-aipage">
+                                    <!-- Sub-prompt chips injected dynamically -->
+                                </div>
+                            </div>
+
+                            <div class="chat-input-row-bar-aipage">
+                                <input type="text" id="overlay-chat-input-aipage" class="rounded-rect-aipage" placeholder="Follow up on this prompt..." onkeydown="if(event.key==='Enter') sendOverlayFollowUp()">
+                                <button onclick="sendOverlayFollowUp()" class="btn-blue">Send</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>                
+
+                <section id="page-my-account" class="view-page hidden-view">
+                    <div class="settings-control-grid">
+                        <div class="settings-tabs-topbar">
+                            <button class="settings-tab-btn active" onclick="switchSettingsSection('account-info')">Profile Information</button>
+                            <button class="settings-tab-btn" onclick="switchSettingsSection('my-products')">Manage Posted Products</button>
+                            <button class="settings-tab-btn" onclick="switchSettingsSection('more-from-fort')">More from Fort Developers</button>
+                        </div>
+
+                        <div class="settings-content-pane rounded-rect scrollable-container">
+                            
+                            <div id="settings-node-account-info" class="settings-sub-panel">
+                                <div class="settings-section-container rounded-rect">
+                                    <h2>Profile Information</h2>
+                                    <div class="profile-photo-center-block text-center">
+                                        <div class="large-avatar-frame circle-container" onclick="openProfileEditWizard('avatar')">
+                                            <img id="profile-pane-avatar-display" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230288d1'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" alt="Account Avatar">
+                                            <div class="pencil-overlay-icon">📷</div>
+                                        </div>
+                                    </div>
+                                    <div class="profile-details-list">
+                                        <div class="detail-row-item">
+                                            <label>Identity Name:</label>
+                                            <div class="editable-field-row">
+                                                <span id="txt-profile-username-val" class="bold-text">Loading User...</span>
+                                                <button class="btn-sm-pencil" onclick="openProfileEditWizard('identityName')">✏️</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div id="personal-profile-only-fields" class="hidden-node">
+                                            <div class="detail-row-item border-top-divider" style="padding-top: 16px;">
+                                                <label>Profile Scale / Commercial Infrastructure Expansion:</label>
+                                                <p style="font-size: 0.8rem; color: #718096; margin-bottom: 8px;">Upgrade this consumer node to an enterprise corporate tier to unlock localized marketplace product posting registries privileges.</p>
+                                                <button class="btn-blue" style="background-color: #2b6cb0; width: auto; font-size: 0.85rem;" onclick="triggerPersonalToBusinessUpgradeFlowStepOne()">🚀 Convert Account to Business Tier Profile</button>
+                                            </div>
+                                        </div>
+
+                                        <div id="business-profile-only-fields" class="hidden-node">
+                                            <div class="detail-row-item">
+                                                <label>Corporate Business Entity Name:</label>
+                                                <div class="editable-field-row">
+                                                    <span id="txt-profile-busname-val" class="bold-text">N/A</span>
+                                                    <button class="btn-sm-pencil" onclick="openProfileEditWizard('businessName')">✏️</button>
+                                                </div>
+                                            </div>
+                                            <div class="detail-row-item">
+                                                <label>Public Professional Bio / Summary Note:</label>
+                                                <div class="editable-field-row">
+                                                    <span id="txt-profile-businfo-val">N/A</span>
+                                                    <button class="btn-sm-pencil" onclick="openProfileEditWizard('businessInfo')">✏️</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="detail-row-item-second border-top-divider btn-group" style="margin-top: 20px; padding-top: 16px; justify-content: space-between;">
+                                            <button class="btn-gray" onclick="openProfileEditWizard('password')">🔒 Change Password</button>
+                                            <button onclick="openLogoutConfirmationModal()" class="btn-danger">Logout</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="settings-node-my-products" class="settings-sub-panel hidden-node">
+                                <div class="settings-section-container rounded-rect">
+                                    <h2>Your System Postings Ledger</h2>
+                                    <div id="my-products-list-container" class="dashboard-products-listing-stack"></div>
+                                </div>
+                            </div>
+
+                            <div id="settings-node-chat-settings" class="settings-sub-panel hidden-node">
+                                <div class="settings-section-container rounded-rect">
+                                    <h2>Messenger Infrastructure Configurations</h2>
+                                    <div class="form-checkbox-group-row">
+                                        <input type="checkbox" id="chk-cfg-notifications" onchange="updateChatConfigurationState()">
+                                        <label for="chk-cfg-notifications">Enable Local Browser Native Service Notifications</label>
+                                    </div>
+                                    <div class="form-checkbox-group-row margin-top-sm">
+                                        <input type="checkbox" id="chk-cfg-autoreply" onchange="toggleAutoReplyTextInputNode(this.checked)">
+                                        <label for="chk-cfg-autoreply">Enable Instantaneous Incoming Auto-Reply Gateway</label>
+                                    </div>
+                                    <div id="autoreply-text-input-node" class="hidden-node margin-top-xs">
+                                        <label>Define Auto-Reply Content String Expression:</label>
+                                        <textarea id="txt-cfg-autoreply-message" class="rounded-rect form-text-area" placeholder="Thank you for contacting us. We will evaluate your query and message you shortly." oninput="updateChatConfigurationState()"></textarea>
+                                    </div>
+                                    <div class="form-checkbox-group-row margin-top-sm">
+                                        <input type="checkbox" id="chk-cfg-autodownload" onchange="updateChatConfigurationState()">
+                                        <label for="chk-cfg-autodownload">Enable Media File Downloader Automations to Local Storage Device</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="settings-node-ratings-reviews" class="settings-sub-panel hidden-node">
+                                <div class="settings-section-container rounded-rect">
+                                    <h2>Platform Experience Performance Evaluation</h2>
+                                    <hr>
+                                    <p>For ratings contact our customer care channels.</p>
+                                    <br>
+                                    <button class="btn-blue" onclick="switchSettingsSection('more-from-fort')">View Customer Care Lines</button>
+                                </div>
+                            </div>
+
+                            <div id="settings-node-more-from-fort" class="settings-sub-panel hidden-node">
+                                <div class="settings-section-container rounded-rect">
+                                    <h2>Official Developer Contact Access Ports</h2>
+                                    <div class="suite-extensions-vertical-stack" style="margin-bottom:25px;">
+                                        
+                                        <!-- WhatsApp Card -->
+                                        <div class="suite-extension-row-card rounded-rect">
+                                            <div class="card-info">
+                                                <span class="card-icon" style="color: #25D366;"><i class="fa-brands fa-whatsapp"></i></span>
+                                                <div>
+                                                    <strong>WhatsApp Corporate Node:</strong><br>
+                                                    <a href="https://wa.me/2348028241162" target="_blank" style="color:var(--fort-blue-light); text-decoration:none; font-weight:700;">+2348028241162</a>
+                                                </div>
+                                            </div>
+                                            <a href="https://wa.me/2348028241162" target="_blank" class="card-btn-link">
+                                                <button class="btn-blue"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</button>
+                                            </a>
+                                        </div>
+
+                                        <!-- Gmail Card -->
+                                        <div class="suite-extension-row-card rounded-rect">
+                                            <div class="card-info">
+                                                <span class="card-icon" style="color: #EA4335;"><i class="fa-solid fa-envelope"></i></span>
+                                                <div>
+                                                    <strong>E-Mail Support Gateway:</strong><br>
+                                                    <a href="mailto:fortdevelopers492@gmail.com" style="color:var(--fort-blue-light); text-decoration:none; font-weight:700;">fortdevelopers492@gmail.com</a>
+                                                </div>
+                                            </div>
+                                            <a href="mailto:fortdevelopers492@gmail.com" class="card-btn-link">
+                                                <button class="btn-blue"><i class="fa-solid fa-envelope"></i> Email Us</button>
+                                            </a>
+                                        </div>
+
+                                        <!-- Facebook Card -->
+                                        <div class="suite-extension-row-card rounded-rect">
+                                            <div class="card-info">
+                                                <span class="card-icon" style="color: #1877F2;"><i class="fa-brands fa-facebook"></i></span>
+                                                <div>
+                                                    <strong>Facebook Page:</strong><br>
+                                                    <a href="https://facebook.com/fortdevelopers492" target="_blank" style="color:var(--fort-blue-light); text-decoration:none; font-weight:700;">Fort Developers</a>
+                                                </div>
+                                            </div>
+                                            <a href="https://facebook.com/fortdevelopers492" target="_blank" class="card-btn-link">
+                                                <button class="btn-blue"><i class="fa-brands fa-facebook"></i> Visit Our Facebook Page</button>
+                                            </a>
+                                        </div>
+
+                                    </div>   
+                                    <h2>Other Websites from Fort Developers</h2>
+                                    <hr>
+                                    <br>
+                                    <div id="suite-extensions-display-grid" class="suite-extensions-vertical-stack">
+                                        <div id="dynamic-websites-container-fortdev">
+                                            <div class="section-content-wrapper-fortdev website-section-layout">
+                                                <div class="website-meta-side">
+                                                    <div class="large-avatar-frame-fortdev rounded-rect">
+                                                        <img src="fort-logo-circle-cropped.png" alt="Fort Mart Logo">
+                                                    </div>
+                                                    <div class="website-info-block-fortdev">
+                                                        <div class="header-inline-edit-row-fortdev">
+                                                            <h3 id="fm-title-text">Fort Developers</h3>
+                                                        </div>
+                                                        <p id="fm-info-text" class="margin-top-xs">The main webpage of fort developers, which shows all about fort developers and includes their "about us" document.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="margin-top-md">
+                                                    <button class="btn-blue" onclick="window.open('https://fortdevelopers.com.ng', '_blank')">Visit Website</button>
+                                                </div>                    
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div id="dynamic-websites-container-fortdev">
+                                            <div class="section-content-wrapper-fortdev website-section-layout">
+                                                <div class="website-meta-side">
+                                                    <div class="large-avatar-frame-fortdev rounded-rect">
+                                                        <img src="fort-website-builder-logo-circle-cropped.png" alt="Fort Logo">
+                                                    </div>
+                                                    <div class="website-info-block-fortdev">
+                                                        <div class="header-inline-edit-row-fortdev">
+                                                            <h3 id="fm-title-text">Fort || Custom Website Solutions</h3>
+                                                        </div>
+                                                        <p id="fm-info-text" class="margin-top-xs">A website that shows the different plans and costs of website creation based on features, pages and complexity</p>
+                                                    </div>
+                                                </div>
+                                                <div class="margin-top-md">
+                                                    <button class="btn-blue" onclick="window.open('https://createawebsite.fortdevelopers.com.ng', '_blank')">Visit Website</button>
+                                                </div>                    
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div id="dynamic-websites-container-fortdev">
+                                            <div class="section-content-wrapper-fortdev website-section-layout">
+                                                <div class="website-meta-side">
+                                                    <div class="large-avatar-frame-fortdev rounded-rect">
+                                                        <img src="fort-graphics-logo-circle-cropped.png" alt="Fort Logo">
+                                                    </div>
+                                                    <div class="website-info-block-fortdev">
+                                                        <div class="header-inline-edit-row-fortdev">
+                                                            <h3 id="fm-title-text">Fort Graphics Marketplace</h3>
+                                                        </div>
+                                                        <p id="fm-info-text" class="margin-top-xs">A website where you can hire a professional designer just by uploading a project request. It also includes features like an assets libary and a design libary where you can get any design customized for you.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="margin-top-md">
+                                                    <button class="btn-blue" onclick="window.open('https://graphics.fort-site.com.ng', '_blank')">Visit Website</button>
+                                                </div>                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="page-admin-dashboard" class="view-page hidden-view">
+                    <h2>System Administration Analytical Metric Dashboard Control Matrix</h2>
+                    
+                    <div class="metrics-statistical-summary-grid margin-top-md">
+                        <div class="metric-card-box rounded-rect">
+                            <h4>Total Registered Members Registry</h4>
+                            <p class="metric-numeric-callout" id="lbl-metric-total-users-count">0 Users</p>
+                        </div>
+                        <div class="metric-card-box rounded-rect">
+                            <h4>Active Catalog Product Nodes</h4>
+                            <p class="metric-numeric-callout" id="lbl-metric-total-products-count">0 Products</p>
+                        </div>
+                        <div class="metric-card-box rounded-rect">
+                            <h4>Authorized Account Manager Tier Token</h4>
+                            <p class="metric-numeric-callout" style="font-size:1.1rem; color:var(--fort-blue-light);">Fort Mart Account Manager</p>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section-container rounded-rect margin-top-lg" style="background:#fff;">
+                        <h3>Core Client Profiles Registry Log Control</h3>
+                        <div class="margin-top-sm" style="display:flex; gap:10px;">
+                            <input type="text" id="admin-user-search-bar" class="form-field-control" placeholder="Search accounts by name, email, account type, status..." oninput="renderAdminUsersManagementList()" style="flex:1;">
+                        </div>
+                        <div id="admin-users-list-container" class="dashboard-products-listing-stack margin-top-md" style="max-height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+                            <!-- Dynamic Users Roster Rendered Here -->
+                        </div>
+                    </div>
+    
+                </section>
+
+            </main>
+
+            <!-- Sticky Footer Ad Container (Remaining 10% height) -->
+            <div id="footer-ad-container" class="footer-ad-bar"></div>
+        </div>
+
+    </div>
+
+    <div id="product-detail-modal" class="modal-overlay">
+        <div class="modal-box-expanded rounded-rect scrollable-container" id="product-detail-modal-body"></div>
+    </div>
+
+    <div id="logout-confirm-modal" class="modal-overlay">
+        <div class="modal-box rounded-rect" id="logout-modal-content">
+            <h2>Confirm Account Logout</h2>
+            <p style="font-size: 1rem; color: #555; margin-bottom: 15px;">
+                For security reasons, please enter your password to confirm logging out of this device.
+            </p>
+            
+            <div class="form-input-container">
+                <label>Account Password:</label>
+                <input type="password" id="logout-auth-password" class="form-field-control" placeholder="Enter your current password">
+                <div id="err-logout-password" class="text-danger-alert hidden-node"></div>
+            </div>
+
+            <div style="margin-top: 6px; display: flex; align-items: center; gap: 6px;">
+                <input type="checkbox" id="chk-logout-showpass" onchange="toggleFormPasswordFieldVisibility(this, 'logout-auth-password')">
+                <label for="chk-logout-showpass" style="font-size: 0.8rem; font-weight: 400; cursor: pointer; user-select: none;">Show Password</label>
+            </div>
+
+            <div class="btn-group" style="margin-top: 20px;">
+                <button onclick="closeActiveModalDirectly('logout-confirm-modal')" class="btn-gray">Cancel</button>
+                <button onclick="executeSecureAccountLogout()" class="btn-danger">Confirm Logout</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

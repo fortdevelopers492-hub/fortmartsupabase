@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Fort Developers Redirecting...</title>
+    <script type="text/javascript">
+        // Take the broken virtual route path segment, store it as a hash, and redirect home
+        var segment = window.location.pathname.split('/').pop();
+        window.location.href = window.location.origin + window.location.pathname.replace(segment, '') + '#' + segment;
+    </script>
+</head>
+<body>
+</body>
+</html>
