@@ -3765,6 +3765,20 @@ function renderProfileEditWizardStepThreeFinalModificationInputLayout(targetFiel
                 <input type="password" id="profile-new-value-2" class="form-field-control" placeholder="Retype expression code configurations">
             </div>
         `;
+    } else if (targetFieldNameStringTokenKey === 'avatar') {
+        inputFieldTypeLayoutPlaceholderHTML = `
+            <div class="form-input-container margin-top-sm">
+                <label>Upload New Profile Picture:</label>
+                <div class="form-input-container-image">
+                    <div class="preview-box" style="min-height: 100px; display: flex; align-items: center; justify-content: center; border: 1px dashed #ccc; margin-bottom: 10px;">
+                        <span id="placeholderTextimg-profile">No image selected</span>
+                        <img id="imagePreview-profile" alt="Image Preview" style="max-width: 100%; max-height: 200px; display: none;">
+                    </div>
+                </div>
+                <input type="file" id="profile-avatar-file" class="form-field-control" accept=".png, .jpg, .jpeg" onchange="processProfileEditAvatarFileSelection()">
+                <input type="hidden" id="profile-new-value-1" value="">
+            </div>
+        `;
     } else {
         const structuralDisplayLabelText = targetFieldNameStringTokenKey === 'identityName' ?
             'Personal Full Name Context' : 
@@ -3813,6 +3827,13 @@ async function executeSaveProfileWizardModificationsToDatabase(targetFieldNameSt
         return;
     }
 
+    // Handle avatar updates specifically via storage and database sync
+    if (targetFieldNameStringTokenKey === 'avatar') {
+        await updateProfileAvatar(val1);
+        closeActiveModalDirectly('auth-modal');
+        return;
+    }
+
     if (targetFieldNameStringTokenKey === 'secretKey') {
         const val2 = document.getElementById("profile-new-value-2").value.trim();
         if (val1 !== val2) {
@@ -3829,6 +3850,7 @@ async function executeSaveProfileWizardModificationsToDatabase(targetFieldNameSt
 
     // Map JavaScript property names to database column names
     const fieldMapping = {
+        username: 'identity_name', // Fallback mapping support
         identityName: 'identity_name',
         businessName: 'business_name',
         businessInfo: 'business_info',
@@ -3877,8 +3899,133 @@ async function executeSaveProfileWizardModificationsToDatabase(targetFieldNameSt
     showTopRightToast("Profile updated successfully", "success");
 }
 
+function processProfileEditAvatarFileSelection() {
+    const fileNode = document.getElementById("profile-avatar-file");
+    const placeholder = document.getElementById("placeholderTextimg-profile");
+    const preview = document.getElementById("imagePreview-profile");
+    const hiddenVal = document.getElementById("profile-new-value-1");
+
+    if (fileNode && fileNode.files && fileNode.files[0]) {
+        const readerInstance = new FileReader();
+        readerInstance.onload = function(e) {
+            if (preview) {
+                preview.src = e.target.result;
+                preview.style.display = "block";
+            }
+            if (placeholder) {
+                placeholder.style.display = "none";
+            }
+            if (hiddenVal) {
+                hiddenVal.value = e.target.result;
+            }
+        };
+        readerInstance.readAsDataURL(fileNode.files[0]);
+    } else {
+        if (preview) {
+            preview.src = "";
+            preview.style.display = "none";
+        }
+        if (placeholder) {
+            placeholder.style.display = "block";
+        }
+        if (hiddenVal) {
+            hiddenVal.value = "";
+        }
+    }
+}
+
 /**
  * Handle new avatar image updates from profile edit wizard/settings
+ */
+/**
+ * Handle new avatar image updates from profile edit wizard/settings,
+ * uploading directly to the Supabase Storage bucket.
+ */
+/**
+ * Helper function to upload base64, data URLs, or File objects to Supabase Storage bucket 'user-avatars'
+ * Fully safe for both file:/// and https:// protocols.
+ */
+async function uploadAvatarToSupabaseStorage(fileOrBase64, filenamePrefix = 'avatar') {
+    if (!fileOrBase64) return "";
+    
+    const client = getSupabaseClient();
+    if (!client) {
+        console.error("Supabase client could not be initialized.");
+        showTopRightToast("Supabase client is not ready.", "error");
+        return "";
+    }
+
+    let fileBody = fileOrBase64;
+
+    // Convert string inputs (Base64 / Data URLs) to Blob natively (works on file:/// and https://)
+    if (typeof fileOrBase64 === 'string') {
+        try {
+            let base64Data = fileOrBase64;
+            let contentType = 'image/png';
+
+            if (fileOrBase64.startsWith('data:')) {
+                const parts = fileOrBase64.split(';');
+                contentType = parts[0].replace('data:', '');
+                const base64Part = parts.find(p => p.startsWith('base64,'));
+                if (base64Part) {
+                    base64Data = base64Part.replace('base64,', '');
+                }
+            }
+
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            fileBody = new Blob([byteArray], { type: contentType });
+        } catch (err) {
+            console.error("Failed to parse base64 string:", err);
+            showTopRightToast("Failed to parse image file payload.", "error");
+            return "";
+        }
+    }
+    
+    const filePath = `avatars/${filenamePrefix}_${Date.now()}.png`;
+
+    try {
+        // Wrap the Supabase network call in a timeout promise (10 seconds max) 
+        const uploadPromise = client.storage
+            .from('user-avatars')
+            .upload(filePath, fileBody, {
+                contentType: 'image/png',
+                upsert: true
+            });
+
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Supabase storage upload timed out.")), 10000)
+        );
+
+        const { data: uploadData, error: uploadError } = await Promise.race([uploadPromise, timeoutPromise]);
+
+        if (uploadError) {
+            console.error("Supabase Storage Upload Error:", uploadError.message);
+            // Display exact error as a toast without closing the modal
+            showTopRightToast("Upload Failed: " + uploadError.message, "error");
+            return "";
+        }
+
+        const { data: publicUrlData } = client.storage
+            .from('user-avatars')
+            .getPublicUrl(filePath);
+
+        return publicUrlData ? publicUrlData.publicUrl : "";
+
+    } catch (err) {
+        console.error("Upload process failed or timed out:", err.message);
+        showTopRightToast("Upload error: " + err.message, "error");
+        return "";
+    }
+}
+
+/**
+ * Handle new avatar image updates from profile edit wizard/settings,
+ * uploading directly to the Supabase Storage bucket without closing modals on failure.
  */
 async function updateProfileAvatar(fileOrBase64) {
     if (!APP_STATE.currentUser) return;
@@ -3886,25 +4033,38 @@ async function updateProfileAvatar(fileOrBase64) {
     const db = getSupabaseClient();
     if (!db) {
         console.error("Supabase client is not ready yet.");
+        showTopRightToast("Supabase client is not ready.", "error");
         return;
     }
 
-    // Upload image to user-avatars bucket and get public URL
-    const publicUrl = await uploadAvatarToSupabaseStorage(fileOrBase64, APP_STATE.currentUser.uid);
-    if (!publicUrl) return;
+    // 1. Upload image to public Supabase Storage bucket 'user-avatars'
+    const publicAvatarUrl = await uploadAvatarToSupabaseStorage(fileOrBase64, APP_STATE.currentUser.uid);
+    if (!publicAvatarUrl) {
+        // Error toast is already triggered inside uploadAvatarToSupabaseStorage, modal remains open
+        return;
+    }
 
-    // Update avatar column in Supabase database using the local 'db' client
+    // 2. Update avatar column in Supabase database table 'users'
     const { data: updatedRecord, error: updateError } = await db
         .from('users')
-        .update({ avatar: publicUrl })
+        .update({ avatar: publicAvatarUrl })
         .eq('uid', APP_STATE.currentUser.uid)
         .select()
         .single();
 
-    if (!updateError && updatedRecord) {
+    if (updateError) {
+        console.error("Error updating avatar in Supabase database:", updateError.message);
+        showTopRightToast("Database Update Failed: " + updateError.message, "error");
+        return;
+    }
+
+    if (updatedRecord) {
         APP_STATE.currentUser.avatar = updatedRecord.avatar;
         initializeProfileDetailsAccountManagementFieldsValues();
-        showTopRightToast("Avatar updated successfully", "success");
+        showTopRightToast("Avatar successfully uploaded and updated!", "success");
+        
+        // Close modal only on complete success
+        closeActiveModalDirectly('auth-modal');
     }
 }
 
